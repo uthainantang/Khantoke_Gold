@@ -25,7 +25,7 @@
 
 ### สิ่งที่ต้องมี
 
-- PHP 7.4 ขึ้นไป พร้อม extension `mysqli`
+- PHP 7.4 ขึ้นไป พร้อม extension `mysqli` และ `mbstring` (ใช้ตัดข้อความภาษาไทยให้ถูกต้อง)
 - MySQL หรือ MariaDB
 - เว็บเซิร์ฟเวอร์ (Apache/Nginx) หรือใช้ PHP built-in server สำหรับทดสอบ
 
