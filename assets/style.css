@@ -1,6 +1,8 @@
-:root { color-scheme: light dark; }
-
-.kg-app {
+/* ตัวแปรสี/ธีมอยู่ที่ <html> (ไม่ใช่ .kg-app) เพื่อให้ html/body ใช้สีเดียวกับแอปได้โดยตรงเสมอ —
+   กัน "จอดำ" โผล่ตอนเลื่อนเกิน (overscroll) หรือความสูงจอมือถือคำนวณคลาดเคลื่อนชั่วขณะ โดยไม่ต้องพึ่ง
+   CSS :has() ซึ่งเบราว์เซอร์รุ่นเก่าบางตัวอาจไม่รองรับ */
+html {
+  color-scheme: light dark;
   --gold: #C8A020;
   --gold-hi: #E0B824;
   --gold-dim: rgba(200,160,32,0.09);
@@ -18,7 +20,7 @@
   --input-bg: #EDE9DF;
   --input-border: rgba(200,160,32,0.3);
 }
-.kg-app[data-theme="dark"] {
+html[data-theme="dark"] {
   --gold: #F0C840;
   --gold-hi: #FFD84A;
   --gold-dim: rgba(240,200,64,0.11);
@@ -37,12 +39,9 @@
   --input-border: rgba(240,200,64,0.26);
 }
 
-html, body { margin: 0; height: 100%; background: #111018; overscroll-behavior: none; }
+html, body { margin: 0; height: 100%; background: var(--app-bg); overscroll-behavior: none; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Sarabun', sans-serif; }
-/* ถ้า kg-app กำลังใช้โหมดสว่าง ให้พื้นหลังของ body/html เป็นสีเดียวกัน กัน "จอดำ" โผล่ตอนเลื่อนเกิน (overscroll)
-   หรือความสูงจอมือถือคำนวณคลาดเคลื่อนชั่วขณะ (แถบที่อยู่ของเบราว์เซอร์ยุบ/ขยาย) */
-body:has(.kg-app[data-theme="light"]) { background: #F5F2EA; }
 
 .kg-scroll { scrollbar-width: none; -ms-overflow-style: none; }
 .kg-scroll::-webkit-scrollbar { display: none; }

@@ -7,7 +7,7 @@
  */
 ?>
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" data-theme="<?= $initialDark ? 'dark' : 'light' ?>">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="<?= asset_url('assets/style.css') ?>" />
 </head>
 <body>
-<div id="kg-app" class="kg-app" data-theme="<?= $initialDark ? 'dark' : 'light' ?>">
+<div id="kg-app" class="kg-app">
 
   <div class="kg-main">
 
@@ -60,7 +60,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('kg-theme-btn');
-  const dark = document.getElementById('kg-app').getAttribute('data-theme') === 'dark';
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
   btn.innerHTML = dark ? KG_ICONS.sun : KG_ICONS.moon;
 });
 </script>

@@ -63,11 +63,11 @@ const KG = (() => {
 
   function initThemeToggle() {
     const btn = document.getElementById('kg-theme-btn');
-    const app = document.getElementById('kg-app');
-    if (!btn || !app) return;
+    const root = document.documentElement;
+    if (!btn) return;
     btn.addEventListener('click', async () => {
-      const dark = app.getAttribute('data-theme') !== 'dark';
-      app.setAttribute('data-theme', dark ? 'dark' : 'light');
+      const dark = root.getAttribute('data-theme') !== 'dark';
+      root.setAttribute('data-theme', dark ? 'dark' : 'light');
       btn.innerHTML = dark ? KG_ICONS.sun : KG_ICONS.moon;
       try {
         await apiPost('api/settings.php?action=toggle_theme', { dark: dark ? 1 : 0 });
