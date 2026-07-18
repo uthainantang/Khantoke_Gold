@@ -77,16 +77,33 @@ const KG = (() => {
     });
   }
 
-  /** เรียก fetcher(ทุกๆ intervalMs วินาที) เพื่อให้หน้าอัปเดตแบบ real-time หยุดโพลเมื่อแท็บถูกซ่อน */
+  /** true ถ้าผู้ใช้กำลังโฟกัส/พิมพ์อยู่ในช่องกรอกข้อมูลของหน้านั้น (ไม่นับปุ่ม) */
+  function isEditingField() {
+    const el = document.activeElement;
+    const root = document.getElementById('page-root');
+    if (!el || !root || !root.contains(el)) return false;
+    return el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA';
+  }
+
+  /**
+   * เรียก fetcher(ทุกๆ intervalMs วินาที) เพื่อให้หน้าอัปเดตแบบ real-time หยุดโพลเมื่อแท็บถูกซ่อน
+   * และ "ข้าม" รอบอัตโนมัติขณะผู้ใช้กำลังพิมพ์อยู่ในฟอร์ม — ไม่งั้นการ re-render DOM ทุกรอบจะทำให้
+   * ช่องกรอกเสียโฟกัสกลางคัน (บนมือถือ = แป้นพิมพ์หุบเอง) ส่วน refreshNow() (เรียกหลังกดบันทึก/ลบ)
+   * จะรีเฟรชทันทีเสมอ ไม่สนโฟกัส เพราะเป็นการกระทำที่ผู้ใช้ตั้งใจกดเอง
+   */
   function startPolling(fetcher, intervalMs) {
     let timer = null;
-    async function run() {
+    async function raw() {
       try { await fetcher(); } catch (e) { console.warn('polling error', e); }
+    }
+    async function guarded() {
+      if (isEditingField()) return;
+      await raw();
     }
     function start() {
       if (timer) return;
-      run();
-      timer = setInterval(run, intervalMs);
+      guarded();
+      timer = setInterval(guarded, intervalMs);
     }
     function stop() {
       if (timer) { clearInterval(timer); timer = null; }
@@ -95,7 +112,7 @@ const KG = (() => {
       if (document.hidden) stop(); else start();
     });
     start();
-    return { stop, start, refreshNow: run };
+    return { stop, start, refreshNow: raw };
   }
 
   return { fmt, f2, thaiDateLabel, escapeHtml, apiGet, apiPost, toast, startClock, initThemeToggle, startPolling };

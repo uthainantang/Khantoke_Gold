@@ -74,3 +74,11 @@ function require_method(string $method): void
         json_error('ต้องใช้ ' . $method . ' method เท่านั้น', 405);
     }
 }
+
+/** ต่อ ?v=<เวลาที่แก้ไฟล์ล่าสุด> ท้าย path เพื่อบังคับให้เบราว์เซอร์โหลดไฟล์ใหม่ทุกครั้งที่แก้ไข (cache busting) */
+function asset_url(string $path): string
+{
+    $full = __DIR__ . '/../' . $path;
+    $v = is_file($full) ? filemtime($full) : time();
+    return $path . '?v=' . $v;
+}

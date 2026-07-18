@@ -13,7 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>Khantoke Gold — <?= htmlspecialchars($pageTitle) ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="assets/style.css" />
+<link rel="stylesheet" href="<?= asset_url('assets/style.css') ?>" />
 </head>
 <body>
 <div id="kg-app" class="kg-app" data-theme="<?= $initialDark ? 'dark' : 'light' ?>">
@@ -56,7 +56,7 @@
   <div id="kg-toast" class="kg-toast"></div>
 </div>
 
-<script src="assets/app.js"></script>
+<script src="<?= asset_url('assets/app.js') ?>"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('kg-theme-btn');
