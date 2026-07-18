@@ -41,42 +41,46 @@
 
     const mx = d.matrix || { menus: [], rows: [], colTotals: {}, grandTotal: 0 };
     const thStyle = 'padding:6px 3px;font-size:10px;line-height:1.2;font-weight:700;color:var(--text-2);background:var(--gold-dim);border-bottom:1.5px solid var(--gold-border);text-align:center;overflow-wrap:break-word;word-break:break-word;position:sticky;top:0;';
-    const thNoStyle = thStyle + 'width:22px;';
-    const thMenuStyle = thStyle + 'width:38px;';
+    const thNoStyle = thStyle + 'width:20px;';
+    const thNameStyle = thStyle + 'width:52px;text-align:left;';
+    const thMenuStyle = thStyle + 'width:36px;';
     const tdStyle = 'padding:6px 3px;font-size:12px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:center;';
-    const tdNameStyle = 'padding:6px 4px;font-size:12px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:left;overflow-wrap:break-word;word-break:break-word;max-width:72px;';
+    const tdNameStyle = 'padding:6px 4px;font-size:12px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:left;overflow-wrap:break-word;word-break:break-word;';
     const delBtnStyle = 'font-size:10px;color:#D03830;background:rgba(208,56,48,0.09);border:1px solid rgba(208,56,48,0.2);border-radius:6px;padding:3px 5px;cursor:pointer;font-family:\'Sarabun\',sans-serif;font-weight:600;';
 
     const matrixHeadHtml = `
       <tr>
         <th style="${thNoStyle}">ลำดับ</th>
-        <th style="${thStyle}text-align:left;max-width:72px;">รายชื่อ</th>
+        <th style="${thNameStyle}">รายชื่อ</th>
         ${mx.menus.map(m => `<th style="${thMenuStyle}">${KG.escapeHtml(m)}</th>`).join('')}
         <th style="${thNoStyle}">รวม</th>
         <th style="${thNoStyle}"></th>
       </tr>`;
 
-    const matrixRowsHtml = mx.rows.map(r => `
-      <tr>
+    const matrixRowsHtml = mx.rows.map((r, i) => {
+      const rowBg = i % 2 === 0 ? 'var(--card-bg)' : 'var(--input-bg)';
+      return `
+      <tr style="background:${rowBg};">
         <td style="${tdStyle}">${r.no !== null ? KG.escapeHtml(r.no) : '-'}</td>
         <td style="${tdNameStyle}">${KG.escapeHtml(r.name)}</td>
         ${mx.menus.map(m => `<td style="${tdStyle}">${r.cells[m] ? r.cells[m] : ''}</td>`).join('')}
         <td style="${tdStyle}font-weight:800;color:var(--gold);">${r.rowTotal}</td>
         <td style="${tdStyle}">${r.orderId ? `<button type="button" style="${delBtnStyle}" data-delete-order="${r.orderId}">✕</button>` : ''}</td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
 
     const matrixFootHtml = `
       <tr>
-        <td colspan="2" style="${tdStyle}text-align:left;font-weight:700;background:var(--input-bg);">รวม</td>
-        ${mx.menus.map(m => `<td style="${tdStyle}font-weight:800;background:var(--input-bg);">${mx.colTotals[m] || 0}</td>`).join('')}
-        <td style="${tdStyle}font-weight:800;color:var(--gold);background:var(--input-bg);">${mx.grandTotal}</td>
-        <td style="${tdStyle}background:var(--input-bg);"></td>
+        <td colspan="2" style="${tdStyle}text-align:left;font-weight:700;background:var(--gold-dim);">รวม</td>
+        ${mx.menus.map(m => `<td style="${tdStyle}font-weight:800;background:var(--gold-dim);">${mx.colTotals[m] || 0}</td>`).join('')}
+        <td style="${tdStyle}font-weight:800;color:var(--gold);background:var(--gold-dim);">${mx.grandTotal}</td>
+        <td style="${tdStyle}background:var(--gold-dim);"></td>
       </tr>`;
 
     const matrixTableHtml = mx.rows.length === 0
       ? `<div class="kg-card" style="text-align:center;color:var(--text-3);font-size:13px;">ยังไม่มีเมนู/ออเดอร์สำหรับวันที่นี้</div>`
       : `<div class="kg-card" style="padding:0;overflow-x:auto;">
-          <table style="width:100%;border-collapse:collapse;">
+          <table style="table-layout:fixed;border-collapse:collapse;">
             <thead>${matrixHeadHtml}</thead>
             <tbody>${matrixRowsHtml}</tbody>
             <tfoot>${matrixFootHtml}</tfoot>
