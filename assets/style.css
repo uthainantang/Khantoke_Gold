@@ -37,9 +37,12 @@
   --input-border: rgba(240,200,64,0.26);
 }
 
-html, body { margin: 0; height: 100%; background: #111018; }
+html, body { margin: 0; height: 100%; background: #111018; overscroll-behavior: none; }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'Sarabun', sans-serif; }
+/* ถ้า kg-app กำลังใช้โหมดสว่าง ให้พื้นหลังของ body/html เป็นสีเดียวกัน กัน "จอดำ" โผล่ตอนเลื่อนเกิน (overscroll)
+   หรือความสูงจอมือถือคำนวณคลาดเคลื่อนชั่วขณะ (แถบที่อยู่ของเบราว์เซอร์ยุบ/ขยาย) */
+body:has(.kg-app[data-theme="light"]) { background: #F5F2EA; }
 
 .kg-scroll { scrollbar-width: none; -ms-overflow-style: none; }
 .kg-scroll::-webkit-scrollbar { display: none; }
@@ -49,7 +52,7 @@ body { font-family: 'Sarabun', sans-serif; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
 .kg-app {
-  height: 100vh; max-width: 430px; margin: 0 auto; display: flex; flex-direction: column;
+  height: 100vh; height: 100dvh; max-width: 430px; margin: 0 auto; display: flex; flex-direction: column;
   background: var(--app-bg); position: relative; box-shadow: 0 0 80px rgba(0,0,0,0.6);
 }
 
@@ -64,7 +67,7 @@ body { font-family: 'Sarabun', sans-serif; }
 .kg-page-header { padding: 14px 18px 6px; background: var(--app-bg); flex-shrink: 0; }
 .kg-page-header h1 { margin: 0; font-size: 22px; font-weight: 800; color: var(--text-1); letter-spacing: -0.4px; }
 
-.kg-content { flex: 1; overflow-y: auto; padding: 10px 14px 86px; animation: fadeUp 0.22s ease; }
+.kg-content { flex: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 10px 14px 86px; animation: fadeUp 0.22s ease; }
 
 /* card */
 .kg-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 15px 14px; }
