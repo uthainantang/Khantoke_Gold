@@ -40,17 +40,20 @@
       </div>`).join('');
 
     const mx = d.matrix || { menus: [], rows: [], colTotals: {}, grandTotal: 0 };
-    const thStyle = 'padding:9px 10px;font-size:12px;font-weight:700;color:var(--text-2);background:var(--gold-dim);border-bottom:1.5px solid var(--gold-border);text-align:center;white-space:nowrap;position:sticky;top:0;';
-    const tdStyle = 'padding:8px 10px;font-size:13px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:center;white-space:nowrap;';
-    const tdNameStyle = 'padding:8px 10px;font-size:13px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:left;white-space:nowrap;';
+    const thStyle = 'padding:6px 3px;font-size:10px;line-height:1.2;font-weight:700;color:var(--text-2);background:var(--gold-dim);border-bottom:1.5px solid var(--gold-border);text-align:center;overflow-wrap:break-word;word-break:break-word;position:sticky;top:0;';
+    const thNoStyle = thStyle + 'width:22px;';
+    const thMenuStyle = thStyle + 'width:38px;';
+    const tdStyle = 'padding:6px 3px;font-size:12px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:center;';
+    const tdNameStyle = 'padding:6px 4px;font-size:12px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:left;overflow-wrap:break-word;word-break:break-word;max-width:72px;';
+    const delBtnStyle = 'font-size:10px;color:#D03830;background:rgba(208,56,48,0.09);border:1px solid rgba(208,56,48,0.2);border-radius:6px;padding:3px 5px;cursor:pointer;font-family:\'Sarabun\',sans-serif;font-weight:600;';
 
     const matrixHeadHtml = `
       <tr>
-        <th style="${thStyle}">ลำดับ</th>
-        <th style="${thStyle}text-align:left;">รายชื่อ</th>
-        ${mx.menus.map(m => `<th style="${thStyle}">${KG.escapeHtml(m)}</th>`).join('')}
-        <th style="${thStyle}">รวม</th>
-        <th style="${thStyle}"></th>
+        <th style="${thNoStyle}">ลำดับ</th>
+        <th style="${thStyle}text-align:left;max-width:72px;">รายชื่อ</th>
+        ${mx.menus.map(m => `<th style="${thMenuStyle}">${KG.escapeHtml(m)}</th>`).join('')}
+        <th style="${thNoStyle}">รวม</th>
+        <th style="${thNoStyle}"></th>
       </tr>`;
 
     const matrixRowsHtml = mx.rows.map(r => `
@@ -59,7 +62,7 @@
         <td style="${tdNameStyle}">${KG.escapeHtml(r.name)}</td>
         ${mx.menus.map(m => `<td style="${tdStyle}">${r.cells[m] ? r.cells[m] : ''}</td>`).join('')}
         <td style="${tdStyle}font-weight:800;color:var(--gold);">${r.rowTotal}</td>
-        <td style="${tdStyle}">${r.orderId ? `<button type="button" class="kg-btn-delete" data-delete-order="${r.orderId}">ลบ</button>` : ''}</td>
+        <td style="${tdStyle}">${r.orderId ? `<button type="button" style="${delBtnStyle}" data-delete-order="${r.orderId}">✕</button>` : ''}</td>
       </tr>`).join('');
 
     const matrixFootHtml = `

@@ -329,8 +329,6 @@
 
   async function load() {
     const d = await KG.apiGet('api/stock.php');
-    const prodRes = await KG.apiGet('api/production.php'); // เพื่อดึง stockOpts label เดียวกัน (มีราคาต่อหน่วยแสดงในตัวเลือก)
-    d.stockOpts = prodRes.stockOpts;
     render(d);
   }
 

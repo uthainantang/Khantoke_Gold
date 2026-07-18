@@ -195,4 +195,8 @@ json_out([
     'okCount' => count($stock) - $crit - $low,
     'unitOpts' => UNIT_OPTS,
     'sauces' => $sauces,
+    'stockOpts' => array_map(fn($s) => [
+        'id' => $s['id'], 'name' => $s['name'], 'unit' => $s['unit'], 'price' => $s['price'],
+        'label' => $s['name'] . ' (' . $s['unit'] . ($s['price'] ? " · ฿" . f2($s['price']) . "/{$s['unit']}" : '') . ')',
+    ], $stock),
 ]);
