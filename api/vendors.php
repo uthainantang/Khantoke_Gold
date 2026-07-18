@@ -32,9 +32,11 @@ if ($action === 'delete') {
 $vendors = [];
 $res = $conn->query('SELECT id, name, phone, address FROM vendors ORDER BY id');
 while ($v = $res->fetch_assoc()) {
+    // ถ้าชื่อขึ้นต้นด้วยตัวเลข (เช่น "13.พี่ดาว") ให้แสดงเลขเต็มเป็นลำดับ ไม่ใช่แค่หลักแรก
+    $initial = preg_match('/^\d+/', $v['name'], $m) ? $m[0] : mb_substr($v['name'], 0, 1, 'UTF-8');
     $vendors[] = [
         'id' => (int)$v['id'], 'name' => $v['name'], 'phone' => $v['phone'], 'address' => $v['address'],
-        'initial' => mb_substr($v['name'], 0, 1, 'UTF-8'), 'hasAddress' => $v['address'] !== '',
+        'initial' => $initial, 'hasAddress' => $v['address'] !== '',
     ];
 }
 json_out(['ok' => true, 'vendors' => $vendors, 'vendorCount' => count($vendors)]);
