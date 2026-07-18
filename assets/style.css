@@ -55,6 +55,11 @@ body { font-family: 'Sarabun', sans-serif; }
   background: var(--app-bg); position: relative; box-shadow: 0 0 80px rgba(0,0,0,0.6);
 }
 
+/* .kg-main ต้องเป็น flex column ที่ยืดเต็มพื้นที่ที่เหลือใน .kg-app เสมอ (ทั้งมือถือและจอกว้าง)
+   ไม่งั้น .kg-content (flex:1) จะไม่มีผล กลายเป็นโตตามเนื้อหาแทนที่จะ scroll ภายในตัวเอง — ทำให้
+   ทั้งหน้ากลายเป็น scroll เอกสารปกติ (header/nav ไม่คงที่) แทนที่จะ scroll เฉพาะส่วนเนื้อหา */
+.kg-main { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+
 /* header */
 .kg-header { background: var(--header-bg); padding: 13px 18px 11px; border-bottom: 1px solid var(--nav-border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; position: relative; z-index: 10; }
 .kg-header-left { display: flex; align-items: center; gap: 10px; }
@@ -66,7 +71,7 @@ body { font-family: 'Sarabun', sans-serif; }
 .kg-page-header { padding: 14px 18px 6px; background: var(--app-bg); flex-shrink: 0; }
 .kg-page-header h1 { margin: 0; font-size: 22px; font-weight: 800; color: var(--text-1); letter-spacing: -0.4px; }
 
-.kg-content { flex: 1; overflow-y: auto; overscroll-behavior-y: contain; padding: 10px 14px 86px; animation: fadeUp 0.22s ease; }
+.kg-content { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 10px 14px 86px; animation: fadeUp 0.22s ease; }
 
 /* card */
 .kg-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 15px 14px; }
