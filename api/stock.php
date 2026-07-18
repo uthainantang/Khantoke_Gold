@@ -66,14 +66,18 @@ if ($action === 'sauce_add') {
     json_out(['ok' => true, 'message' => "เพิ่ม \"$name\" แล้ว ✓"]);
 }
 
-if ($action === 'sauce_update_name') {
+if ($action === 'sauce_update') {
     require_method('POST');
     $body = request_body();
     $id = (int)($body['id'] ?? 0);
     $name = trim((string)($body['name'] ?? ''));
+    $stockQty = (float)($body['stock_qty'] ?? -1);
+    $price = (float)($body['price_per_bag'] ?? -1);
     if ($name === '') json_error('กรุณาระบุชื่อน้ำจิ้ม');
-    $stmt = $conn->prepare('UPDATE sauces SET name = ? WHERE id = ?');
-    $stmt->bind_param('si', $name, $id);
+    if ($stockQty < 0) json_error('กรุณาระบุจำนวนถุงที่ถูกต้อง');
+    if ($price < 0) json_error('กรุณาระบุราคาที่ถูกต้อง');
+    $stmt = $conn->prepare('UPDATE sauces SET name = ?, stock_qty = ?, max_price_per_bag = ? WHERE id = ?');
+    $stmt->bind_param('sddi', $name, $stockQty, $price, $id);
     $stmt->execute();
     json_out(['ok' => true, 'message' => "อัปเดต \"$name\" แล้ว ✓"]);
 }

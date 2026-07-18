@@ -4,7 +4,7 @@
     showAddMat: false, matName: '', matQty: '', matUnit: 'กก.', matPrice: '', matMin: '',
     editingStockId: null, editName: '', editQty: '', editUnit: 'กก.', editMin: '', editPrice: '',
     showAddSauce: false, newSauceName: '',
-    expandedSauceId: null, editingSauceNameId: null, editSauceName: '',
+    expandedSauceId: null, editingSauceNameId: null, editSauceName: '', editSauceQty: '', editSaucePrice: '',
     addingIngSauceId: null, newSIngStockId: '', newSIngQty: '',
     addingQtySauceId: null, newSauceBags: '',
   };
@@ -106,7 +106,18 @@
           <div style="color:var(--text-3);font-size:14px;flex-shrink:0;">${expanded ? '▲' : '▼'}</div>
         </div>` : `
         <div style="padding:14px;">
-          <input type="text" class="kg-input gold" style="font-weight:700;margin-bottom:9px;" id="edit-sauce-name-${sa.id}" value="${KG.escapeHtml(local.editSauceName)}" />
+          <div class="kg-section-label">แก้ไขข้อมูลน้ำจิ้ม</div>
+          <input type="text" class="kg-input gold" style="font-weight:700;margin-bottom:9px;" id="edit-sauce-name-${sa.id}" placeholder="ชื่อน้ำจิ้ม" value="${KG.escapeHtml(local.editSauceName)}" />
+          <div class="kg-grid-2" style="gap:6px;margin-bottom:9px;">
+            <div>
+              <div style="font-size:10px;color:var(--text-3);margin-bottom:3px;">จำนวนถุงคงเหลือ</div>
+              <input type="number" class="kg-input gold-strong" id="edit-sauce-qty-${sa.id}" inputmode="decimal" value="${KG.escapeHtml(local.editSauceQty)}" />
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--text-3);margin-bottom:3px;">ราคาต่อถุง (฿)</div>
+              <input type="number" class="kg-input gold-strong" id="edit-sauce-price-${sa.id}" inputmode="decimal" value="${KG.escapeHtml(local.editSaucePrice)}" />
+            </div>
+          </div>
           <div style="display:flex;gap:6px;">
             <button type="button" class="kg-btn-gold-sm" data-save-sauce-name="${sa.id}">บันทึก</button>
             <button type="button" class="kg-btn-ghost" data-cancel-sauce-name>ยกเลิก</button>
@@ -249,13 +260,19 @@
       e.stopPropagation();
       const sa = d.sauces.find(s => String(s.id) === btn.dataset.startEditSauceName);
       local.editingSauceNameId = sa.id; local.editSauceName = sa.name;
+      local.editSauceQty = String(sa.stockQty); local.editSaucePrice = sa.maxPricePerBag ? String(sa.maxPricePerBag) : '0';
       render(d);
     }));
     qa('[id^="edit-sauce-name-"]').forEach(inp => inp.addEventListener('input', e => local.editSauceName = e.target.value));
+    qa('[id^="edit-sauce-qty-"]').forEach(inp => inp.addEventListener('input', e => local.editSauceQty = e.target.value));
+    qa('[id^="edit-sauce-price-"]').forEach(inp => inp.addEventListener('input', e => local.editSaucePrice = e.target.value));
     qa('[data-cancel-sauce-name]').forEach(btn => btn.addEventListener('click', () => { local.editingSauceNameId = null; render(d); }));
     qa('[data-save-sauce-name]').forEach(btn => btn.addEventListener('click', async () => {
       try {
-        const res = await KG.apiPost('api/stock.php?action=sauce_update_name', { id: btn.dataset.saveSauceName, name: local.editSauceName });
+        const res = await KG.apiPost('api/stock.php?action=sauce_update', {
+          id: btn.dataset.saveSauceName, name: local.editSauceName,
+          stock_qty: local.editSauceQty, price_per_bag: local.editSaucePrice,
+        });
         KG.toast(res.message);
         local.editingSauceNameId = null;
         poller.refreshNow();
