@@ -61,6 +61,7 @@
             <span style="font-size:12px;color:var(--text-3);">฿</span>
             <span style="font-size:11px;font-weight:700;color:${d.marginColor};background:${d.marginColor}20;border-radius:6px;padding:2px 7px;">${d.marginPct}%</span>
           </div>
+          ${d.hasOtherExpense ? `<div style="font-size:10px;color:var(--text-3);margin-top:4px;">หักค่าแรง/อื่นๆ ฿${d.otherExpense}</div>` : ''}
         </div>
         <div class="kg-card">
           <div style="font-size:11px;font-weight:600;color:var(--text-2);letter-spacing:0.5px;margin-bottom:6px;">ต้นทุนวัตถุดิบ</div>

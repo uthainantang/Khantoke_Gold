@@ -116,6 +116,22 @@ CREATE TABLE station_logs (
   INDEX idx_station_logs_date (production_date)
 ) ENGINE=InnoDB;
 
+-- ── รายจ่าย (ต้นทุนวัตถุดิบ / ค่าแรง / อื่นๆ) ──────────────────
+DROP TABLE IF EXISTS expenses;
+CREATE TABLE expenses (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  expense_date DATE NOT NULL,
+  category ENUM('material','labor','other') NOT NULL,
+  stock_id INT NULL,
+  description VARCHAR(150) NOT NULL,
+  qty DECIMAL(10,2) NULL,
+  unit VARCHAR(20) NULL,
+  unit_price DECIMAL(10,2) NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_expenses_date (expense_date)
+) ENGINE=InnoDB;
+
 -- ============================================================
 -- ข้อมูลตัวอย่างเริ่มต้น (เหมือนต้นฉบับดีไซน์ Khantoke Gold)
 -- ============================================================

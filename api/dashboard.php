@@ -46,8 +46,15 @@ foreach ($orders as $o) {
         $salesByMenu[$it['menu_name']]['amt'] += $amt;
     }
 }
-$totalCostRaw = round($totalSalesRaw * 0.576);
-$totalProfitRaw = $totalSalesRaw - $totalCostRaw;
+// ต้นทุนวัตถุดิบจริง (จากรายจ่ายที่บันทึกในหน้า "รายจ่าย") แทนตัวเลขประมาณการเดิม
+// ค่าแรง/อื่นๆ หักออกจากกำไรสุทธิด้วย แต่ไม่นับรวมเป็น "ต้นทุนวัตถุดิบ"
+$totalCostRaw = 0.0; $otherExpenseRaw = 0.0;
+$eres = $conn->query("SELECT category, SUM(amount) total FROM expenses GROUP BY category");
+while ($e = $eres->fetch_assoc()) {
+    if ($e['category'] === 'material') $totalCostRaw = (float)$e['total'];
+    else $otherExpenseRaw += (float)$e['total'];
+}
+$totalProfitRaw = $totalSalesRaw - $totalCostRaw - $otherExpenseRaw;
 $yest = 12400;
 $diff = $totalSalesRaw - $yest;
 $trendPct = $yest > 0 ? round(($diff / $yest) * 100, 1) : 0;
@@ -103,6 +110,8 @@ json_out([
     'totalSales' => fmt_money($totalSalesRaw),
     'totalBoxes' => $totalBoxesRaw,
     'totalProfit' => fmt_money($totalProfitRaw),
+    'otherExpense' => fmt_money($otherExpenseRaw),
+    'hasOtherExpense' => $otherExpenseRaw > 0,
     'totalCost' => fmt_money($totalCostRaw),
     'marginPct' => $marginPctRaw,
     'marginColor' => $marginColor,
