@@ -120,6 +120,56 @@ foreach (array_reverse($ordersForDate) as $o) {
     ];
 }
 
+// ── ตารางสรุป: รายชื่อลูกค้า × เมนู (แบบตารางสเปรดชีต) ──
+$itemsByOrderId = [];
+foreach ($ordersForDate as $o) {
+    $istmt = $conn->prepare('SELECT menu_name, qty FROM order_items WHERE order_id = ?');
+    $istmt->bind_param('i', $o['id']);
+    $istmt->execute();
+    $ir = $istmt->get_result();
+    $map = [];
+    while ($it = $ir->fetch_assoc()) $map[$it['menu_name']] = (int)$it['qty'];
+    $itemsByOrderId[$o['id']] = $map;
+}
+$orderByVendorName = [];
+foreach ($ordersForDate as $o) {
+    if (!isset($orderByVendorName[$o['customer_name']])) $orderByVendorName[$o['customer_name']] = $o;
+}
+
+$matrixRows = [];
+foreach ($vendors as $v) {
+    $no = null; $displayName = $v['name'];
+    if (preg_match('/^(\d+)\.\s*(.*)$/', $v['name'], $m)) {
+        $no = $m[1]; $displayName = $m[2] !== '' ? $m[2] : $v['name'];
+    }
+    $order = $orderByVendorName[$v['name']] ?? null;
+    $cells = [];
+    $rowTotal = 0;
+    foreach ($todayMenus as $menu) {
+        $qty = $order ? ($itemsByOrderId[$order['id']][$menu] ?? 0) : 0;
+        $cells[$menu] = $qty;
+        $rowTotal += $qty;
+    }
+    $matrixRows[] = [
+        'vendorId' => (int)$v['id'], 'no' => $no, 'name' => $displayName,
+        'orderId' => $order ? (int)$order['id'] : null,
+        'cells' => $cells, 'rowTotal' => $rowTotal,
+    ];
+}
+// เรียงตามเลขลำดับ (ถ้ามี) แล้วตามด้วยชื่อ
+usort($matrixRows, function ($a, $b) {
+    if ($a['no'] !== null && $b['no'] !== null) return (int)$a['no'] <=> (int)$b['no'];
+    if ($a['no'] !== null) return -1;
+    if ($b['no'] !== null) return 1;
+    return strcmp($a['name'], $b['name']);
+});
+
+$matrixColTotals = [];
+foreach ($todayMenus as $menu) {
+    $matrixColTotals[$menu] = array_sum(array_column(array_column($matrixRows, 'cells'), $menu));
+}
+$matrixGrandTotal = array_sum($matrixColTotals);
+
 json_out([
     'ok' => true,
     'orderDate' => $orderDate,
@@ -132,4 +182,10 @@ json_out([
     'orderItems' => $orderItems,
     'orderCount' => count($ordersForDate),
     'orderBoxTotal' => $orderBoxTotal,
+    'matrix' => [
+        'menus' => $todayMenus,
+        'rows' => $matrixRows,
+        'colTotals' => $matrixColTotals,
+        'grandTotal' => $matrixGrandTotal,
+    ],
 ]);

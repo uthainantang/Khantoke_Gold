@@ -39,25 +39,46 @@
         </div>
       </div>`).join('');
 
-    const orderItemsHtml = d.orderItems.map(ord => `
-      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:13px;padding:13px 14px;margin-bottom:9px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <div style="font-size:15px;font-weight:700;color:var(--text-1);">${KG.escapeHtml(ord.customer)}</div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="font-size:11px;color:var(--text-3);">${ord.time}</div>
-            <button type="button" class="kg-btn-delete" data-delete-order="${ord.id}">ลบ</button>
-          </div>
-        </div>
-        ${ord.items.map(oi => `
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--divider);">
-            <div style="font-size:13px;color:var(--text-2);">${KG.escapeHtml(oi.menu)}</div>
-            <div style="font-size:13px;color:var(--text-1);">${oi.qty} กล่อง <span style="font-weight:700;color:var(--gold);">฿${oi.amt}</span></div>
-          </div>`).join('')}
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-          <div style="font-size:12px;color:var(--text-3);">${ord.totalBoxes} กล่อง</div>
-          <div style="font-size:15px;font-weight:800;color:var(--gold);">฿${ord.total}</div>
-        </div>
-      </div>`).join('');
+    const mx = d.matrix || { menus: [], rows: [], colTotals: {}, grandTotal: 0 };
+    const thStyle = 'padding:9px 10px;font-size:12px;font-weight:700;color:var(--text-2);background:var(--gold-dim);border-bottom:1.5px solid var(--gold-border);text-align:center;white-space:nowrap;position:sticky;top:0;';
+    const tdStyle = 'padding:8px 10px;font-size:13px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:center;white-space:nowrap;';
+    const tdNameStyle = 'padding:8px 10px;font-size:13px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:left;white-space:nowrap;';
+
+    const matrixHeadHtml = `
+      <tr>
+        <th style="${thStyle}">ลำดับ</th>
+        <th style="${thStyle}text-align:left;">รายชื่อ</th>
+        ${mx.menus.map(m => `<th style="${thStyle}">${KG.escapeHtml(m)}</th>`).join('')}
+        <th style="${thStyle}">รวม</th>
+        <th style="${thStyle}"></th>
+      </tr>`;
+
+    const matrixRowsHtml = mx.rows.map(r => `
+      <tr>
+        <td style="${tdStyle}">${r.no !== null ? KG.escapeHtml(r.no) : '-'}</td>
+        <td style="${tdNameStyle}">${KG.escapeHtml(r.name)}</td>
+        ${mx.menus.map(m => `<td style="${tdStyle}">${r.cells[m] ? r.cells[m] : ''}</td>`).join('')}
+        <td style="${tdStyle}font-weight:800;color:var(--gold);">${r.rowTotal}</td>
+        <td style="${tdStyle}">${r.orderId ? `<button type="button" class="kg-btn-delete" data-delete-order="${r.orderId}">ลบ</button>` : ''}</td>
+      </tr>`).join('');
+
+    const matrixFootHtml = `
+      <tr>
+        <td colspan="2" style="${tdStyle}text-align:left;font-weight:700;background:var(--input-bg);">รวม</td>
+        ${mx.menus.map(m => `<td style="${tdStyle}font-weight:800;background:var(--input-bg);">${mx.colTotals[m] || 0}</td>`).join('')}
+        <td style="${tdStyle}font-weight:800;color:var(--gold);background:var(--input-bg);">${mx.grandTotal}</td>
+        <td style="${tdStyle}background:var(--input-bg);"></td>
+      </tr>`;
+
+    const matrixTableHtml = mx.rows.length === 0
+      ? `<div class="kg-card" style="text-align:center;color:var(--text-3);font-size:13px;">ยังไม่มีเมนู/ออเดอร์สำหรับวันที่นี้</div>`
+      : `<div class="kg-card" style="padding:0;overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>${matrixHeadHtml}</thead>
+            <tbody>${matrixRowsHtml}</tbody>
+            <tfoot>${matrixFootHtml}</tfoot>
+          </table>
+        </div>`;
 
     root.innerHTML = `
       <div class="kg-card-tight kg-mb12" style="display:flex;align-items:center;gap:12px;">
@@ -101,7 +122,7 @@
       </div>
 
       <div class="kg-section-label">รายการวันที่ ${d.orderDateLabel} (${d.orderCount} ร้าน)</div>
-      ${orderItemsHtml}
+      ${matrixTableHtml}
     `;
 
     document.getElementById('order-date-input').addEventListener('change', async (e) => {
