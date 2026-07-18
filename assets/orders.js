@@ -40,12 +40,12 @@
       </div>`).join('');
 
     const mx = d.matrix || { menus: [], rows: [], colTotals: {}, grandTotal: 0 };
-    const thStyle = 'padding:6px 3px;font-size:10px;line-height:1.2;font-weight:700;color:var(--text-2);background:var(--gold-dim);border-bottom:1.5px solid var(--gold-border);text-align:center;overflow-wrap:break-word;word-break:break-word;position:sticky;top:0;';
+    const thStyle = 'padding:6px 3px;font-size:10px;line-height:1.3;font-weight:700;color:var(--text-2);background:var(--gold-dim);border-bottom:1.5px solid var(--gold-border);text-align:center;overflow-wrap:anywhere;position:sticky;top:0;';
     const thNoStyle = thStyle + 'width:20px;';
     const thNameStyle = thStyle + 'width:52px;text-align:left;';
     const thMenuStyle = thStyle + 'width:36px;';
     const tdStyle = 'padding:6px 3px;font-size:12px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:center;';
-    const tdNameStyle = 'padding:6px 4px;font-size:12px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:left;overflow-wrap:break-word;word-break:break-word;';
+    const tdNameStyle = 'padding:6px 4px;font-size:12px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:left;overflow-wrap:anywhere;';
     const delBtnStyle = 'font-size:10px;color:#D03830;background:rgba(208,56,48,0.09);border:1px solid rgba(208,56,48,0.2);border-radius:6px;padding:3px 5px;cursor:pointer;font-family:\'Sarabun\',sans-serif;font-weight:600;';
 
     const matrixHeadHtml = `
@@ -80,7 +80,7 @@
     const matrixTableHtml = mx.rows.length === 0
       ? `<div class="kg-card" style="text-align:center;color:var(--text-3);font-size:13px;">ยังไม่มีเมนู/ออเดอร์สำหรับวันที่นี้</div>`
       : `<div class="kg-card" style="padding:0;overflow-x:auto;">
-          <table style="table-layout:fixed;border-collapse:collapse;">
+          <table style="table-layout:fixed;border-collapse:collapse;width:100%;">
             <thead>${matrixHeadHtml}</thead>
             <tbody>${matrixRowsHtml}</tbody>
             <tfoot>${matrixFootHtml}</tfoot>

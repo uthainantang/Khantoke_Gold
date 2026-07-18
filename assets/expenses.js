@@ -69,14 +69,14 @@
       </div>`).join('');
 
     const thStyle = 'padding:6px 4px;font-size:10px;line-height:1.2;font-weight:700;color:var(--text-2);background:var(--gold-dim);border-bottom:1.5px solid var(--gold-border);text-align:center;position:sticky;top:0;';
-    const tdStyle = 'padding:6px 4px;font-size:11px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:center;overflow-wrap:break-word;word-break:break-word;';
+    const tdStyle = 'padding:6px 4px;font-size:11px;color:var(--text-1);border-bottom:1px solid var(--divider);text-align:center;overflow-wrap:anywhere;';
     const delBtnStyle = 'font-size:10px;color:#D03830;background:rgba(208,56,48,0.09);border:1px solid rgba(208,56,48,0.2);border-radius:6px;padding:3px 5px;cursor:pointer;font-family:\'Sarabun\',sans-serif;font-weight:600;';
 
     const items = d.items || [];
     const tableHtml = items.length === 0
       ? `<div class="kg-card" style="text-align:center;color:var(--text-3);font-size:13px;">ยังไม่มีรายจ่ายวันที่นี้</div>`
       : `<div class="kg-card" style="padding:0;overflow-x:auto;">
-          <table style="table-layout:fixed;border-collapse:collapse;">
+          <table style="table-layout:fixed;border-collapse:collapse;width:100%;">
             <thead>
               <tr>
                 <th style="${thStyle}width:36px;">เวลา</th>
