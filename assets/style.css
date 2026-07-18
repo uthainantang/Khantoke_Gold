@@ -70,7 +70,9 @@ body { font-family: 'Sarabun', sans-serif; }
 .kg-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 15px 14px; }
 .kg-card-tight { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 14px; }
 .kg-mb10 { margin-bottom: 10px; } .kg-mb12 { margin-bottom: 12px; } .kg-mb20 { margin-bottom: 20px; }
-.kg-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* auto-fit: กลุ่มที่มีแค่ 2 รายการ (แถวฟอร์ม/KPI) จะเห็นแค่ 2 คอลัมน์เสมอ ส่วนลิสต์ยาว (การ์ดสต๊อก)
+   จะขยายเป็นหลายคอลัมน์อัตโนมัติเมื่อจอกว้างขึ้น */
+.kg-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 10px; }
 .kg-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .kg-section-label { font-size: 11px; font-weight: 700; color: var(--text-2); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 9px; padding-left: 2px; }
 .kg-label { font-size: 12px; font-weight: 600; color: var(--text-2); display: block; margin-bottom: 6px; }
@@ -115,3 +117,53 @@ body { font-family: 'Sarabun', sans-serif; }
 .kg-expand-head { padding: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
 .kg-expand-head:hover { background: var(--gold-dim); }
 .kg-avatar { width: 50px; height: 50px; border-radius: 13px; background: var(--gold-dim); border: 1px solid var(--gold-border); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* ═══════════════════════════ เดสก์ท็อป / จอกว้าง ═══════════════════════════
+   มือถือ (ค่าเริ่มต้นด้านบน): kg-app เป็นการ์ดแคบกึ่งกลางจอ, nav อยู่ล่างสุด
+   จอกว้าง ≥900px: ขยายเต็มความกว้าง, nav ย้ายไปเป็นแถบข้างซ้าย, จำกัดความกว้างเนื้อหาให้อ่านง่าย */
+@media (min-width: 900px) {
+  .kg-app {
+    max-width: none;
+    width: 100%;
+    box-shadow: none;
+  }
+  .kg-main {
+    margin-left: 220px;
+    max-width: 760px;
+  }
+  .kg-content {
+    padding: 18px 24px 40px;
+  }
+  .kg-header, .kg-page-header {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .kg-nav {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    transform: none;
+    width: 220px;
+    max-width: none;
+    height: 100vh;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 2px;
+    padding: 22px 12px 0;
+    border-top: none;
+    border-right: 1px solid var(--nav-border);
+  }
+  .kg-nav a {
+    flex: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    height: auto;
+    padding: 12px 14px;
+    border-radius: 10px;
+  }
+  .kg-nav a:hover { background: var(--gold-dim); }
+  .kg-nav a.active { background: var(--gold-dim); }
+  .kg-nav a span { font-size: 14px; }
+  .kg-toast { left: calc(50% + 110px); }
+}

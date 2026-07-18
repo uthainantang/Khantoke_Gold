@@ -18,26 +18,30 @@
 <body>
 <div id="kg-app" class="kg-app" data-theme="<?= $initialDark ? 'dark' : 'light' ?>">
 
-  <div class="kg-header">
-    <div class="kg-header-left">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-        <polygon points="18,2 33,10 33,26 18,34 3,26 3,10" fill="var(--gold-dim)" stroke="var(--gold)" stroke-width="1.5" />
-        <text x="18" y="22" text-anchor="middle" font-family="Sarabun,sans-serif" font-weight="800" font-size="11" fill="var(--gold)">KG</text>
-      </svg>
-      <div>
-        <div class="kg-title">Khantoke Gold</div>
-        <div class="kg-clock"><span id="kg-clock-date"></span> · <span id="kg-clock-time"></span></div>
+  <div class="kg-main">
+
+    <div class="kg-header">
+      <div class="kg-header-left">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <polygon points="18,2 33,10 33,26 18,34 3,26 3,10" fill="var(--gold-dim)" stroke="var(--gold)" stroke-width="1.5" />
+          <text x="18" y="22" text-anchor="middle" font-family="Sarabun,sans-serif" font-weight="800" font-size="11" fill="var(--gold)">KG</text>
+        </svg>
+        <div>
+          <div class="kg-title">Khantoke Gold</div>
+          <div class="kg-clock"><span id="kg-clock-date"></span> · <span id="kg-clock-time"></span></div>
+        </div>
       </div>
+      <button type="button" id="kg-theme-btn" class="kg-theme-btn"><?= $initialDark ? '' : '' ?></button>
     </div>
-    <button type="button" id="kg-theme-btn" class="kg-theme-btn"><?= $initialDark ? '' : '' ?></button>
-  </div>
 
-  <div class="kg-page-header">
-    <h1><?= htmlspecialchars($pageTitle) ?></h1>
-  </div>
+    <div class="kg-page-header">
+      <h1><?= htmlspecialchars($pageTitle) ?></h1>
+    </div>
 
-  <div class="kg-content kg-scroll" id="page-root">
-    <div style="text-align:center;color:var(--text-3);padding:40px 0;">กำลังโหลด...</div>
+    <div class="kg-content kg-scroll" id="page-root">
+      <div style="text-align:center;color:var(--text-3);padding:40px 0;">กำลังโหลด...</div>
+    </div>
+
   </div>
 
   <div class="kg-nav">
