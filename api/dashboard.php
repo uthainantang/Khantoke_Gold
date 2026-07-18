@@ -46,14 +46,16 @@ foreach ($orders as $o) {
         $salesByMenu[$it['menu_name']]['amt'] += $amt;
     }
 }
-// ต้นทุนวัตถุดิบจริง (จากรายจ่ายที่บันทึกในหน้า "รายจ่าย") แทนตัวเลขประมาณการเดิม
-// ค่าแรง/อื่นๆ หักออกจากกำไรสุทธิด้วย แต่ไม่นับรวมเป็น "ต้นทุนวัตถุดิบ"
-$totalCostRaw = 0.0; $otherExpenseRaw = 0.0;
+// ต้นทุนวัตถุดิบ: ใช้ยอดรายจ่ายจริง (จากหน้า "รายจ่าย") ถ้ามีการบันทึกไว้แล้ว
+// ถ้ายังไม่เคยบันทึกรายจ่ายเลย ใช้สูตรประมาณการเดิม (57.6% ของยอดขาย) ไปพลางก่อน กันไม่ให้ต้นทุน/กำไร
+// เพี้ยนเป็น 0/100% ทันทีสำหรับร้านที่ยังไม่เริ่มใช้ฟีเจอร์รายจ่าย
+$realMaterialCost = 0.0; $otherExpenseRaw = 0.0; $hasMaterialExpense = false;
 $eres = $conn->query("SELECT category, SUM(amount) total FROM expenses GROUP BY category");
 while ($e = $eres->fetch_assoc()) {
-    if ($e['category'] === 'material') $totalCostRaw = (float)$e['total'];
+    if ($e['category'] === 'material') { $realMaterialCost = (float)$e['total']; $hasMaterialExpense = true; }
     else $otherExpenseRaw += (float)$e['total'];
 }
+$totalCostRaw = $hasMaterialExpense ? $realMaterialCost : round($totalSalesRaw * 0.576);
 $totalProfitRaw = $totalSalesRaw - $totalCostRaw - $otherExpenseRaw;
 $yest = 12400;
 $diff = $totalSalesRaw - $yest;
